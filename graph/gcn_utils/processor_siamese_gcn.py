@@ -29,6 +29,8 @@ from gcn_utils.processor_base import Processor
 # import contrastive loss
 from gcn_utils.contrastive import ContrastiveLoss
 
+from tensorboardX import SummaryWriter
+
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv1d') != -1:
@@ -116,6 +118,7 @@ class SGCN_Processor(Processor):
             self.meta_info['iter'] += 1
 
         self.epoch_info['mean_loss']= np.mean(loss_value)
+        self.writer.add_scalar('Loss/train', self.epoch_info['mean_loss'], self.meta_info['epoch'])
         self.show_epoch_info()
         self.io.print_timer()
 
@@ -123,7 +126,7 @@ class SGCN_Processor(Processor):
 
         self.model.eval()
         loader = self.data_loader['test']
-        loss_value = []
+        test_loss_value = []
         result_frag = []
         label_frag = []
         dist_frag = []
@@ -145,7 +148,7 @@ class SGCN_Processor(Processor):
             # get loss
             if evaluation:
                 loss = self.loss(feature_1, feature_2, label)
-                loss_value.append(loss.item())
+                test_loss_value.append(loss.item())
                 label_frag.append(label.data.cpu().numpy())
 
                 # euclidian distance
@@ -164,16 +167,19 @@ class SGCN_Processor(Processor):
         self.result = np.concatenate(result_frag)
         if evaluation:
             self.label = np.concatenate(label_frag)
-            self.epoch_info['mean_loss']= np.mean(loss_value)
+            print(np.max(test_loss_value))
+            self.epoch_info['mean_loss']= np.mean(test_loss_value)
+            self.writer.add_scalar('Loss/test', self.epoch_info['mean_loss'], self.meta_info['epoch'])
             self.show_epoch_info()
 
             #print(result_frag)
             #print(label_frag[0:20])
-            #print(pred_label_frag[0:20])
+            print(pred_label_frag[0:20])
 
             # show accuracy
             accuracy = calculate_accuracy(label_frag, pred_label_frag)
             print("accuracy: {}".format(accuracy))
+            self.writer.add_scalar('Accuracy/test', accuracy, self.meta_info['epoch'])
 
 
     @staticmethod

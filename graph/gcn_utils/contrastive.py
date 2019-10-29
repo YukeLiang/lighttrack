@@ -9,7 +9,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+import numpy as np
 
 class ContrastiveLoss(torch.nn.Module):
     """
@@ -43,8 +43,8 @@ class ContrastiveLoss(torch.nn.Module):
 
         mdist = self.margin - dist
         dist = torch.clamp(mdist, min=0.0)
-        loss = y * dist_sq + (1 - y) * torch.pow(dist, 2)
-        loss = torch.sum(loss) / 2.0
+        loss = (y * dist_sq + (1 - y) * torch.pow(dist, 2))/2.0
+        loss = torch.mean(loss)
         return loss
 
 '''

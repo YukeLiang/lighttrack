@@ -18,6 +18,8 @@ from torchlight import import_class
 
 from .io import IO
 
+from tensorboardX import SummaryWriter
+
 class Processor(IO):
     """
         Base Processor
@@ -40,6 +42,7 @@ class Processor(IO):
         self.iter_info = dict()
         self.epoch_info = dict()
         self.meta_info = dict(epoch=0, iter=0)
+        self.writer = SummaryWriter()
 
     def load_optimizer(self):
         pass

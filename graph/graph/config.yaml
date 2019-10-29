@@ -1,0 +1,50 @@
+# command line: main.py processor_siamese_gcn -c config/train.yaml
+
+base_lr: 0.01
+batch_size: 32
+config: config/train.yaml
+debug: false
+device:
+- 0
+eval_interval: 1
+feeder: gcn_utils.feeder.Feeder
+ignore_weights: []
+log_interval: 100
+model: gcn_utils.gcn_model.Model
+model_args:
+    edge_importance_weighting: true
+    graph_args:
+        layout: PoseTrack
+        strategy: spatial
+    in_channels: 2
+    num_class: 128
+nesterov: true
+num_epoch: 300
+num_worker: 4
+optimizer: SGD
+pavi_log: false
+phase: train
+print_log: true
+save_interval: 10
+save_log: true
+save_result: false
+show_topk:
+- 1
+- 5
+start_epoch: 0
+step:
+- 40
+- 60
+- 100
+- 150
+test_batch_size: 1
+test_feeder_args:
+    data_neg_path: ./unit_test/posetrack_val_data_hard_neg.pickle
+    data_path: ./unit_test/posetrack_val_data.pickle
+train_feeder_args:
+    data_neg_path: ./unit_test/posetrack_train_data_negative.pickle
+    data_path: ./unit_test/posetrack_train_data.pickle
+use_gpu: true
+weight_decay: 0.0001
+weights: null
+work_dir: ./graph
