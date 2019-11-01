@@ -43,10 +43,9 @@ class ContrastiveLoss(torch.nn.Module):
 
         mdist = self.margin - dist
         dist = torch.clamp(mdist, min=0.0)
-        loss = (y * dist_sq + (1 - y) * torch.pow(dist, 2))/2.0
+        loss = y * dist_sq + (1 - y) * torch.pow(dist, 2)
         loss = torch.mean(loss)
         return loss
-
 '''
 # The following comes from:
 # https://github.com/adambielski/siamese-triplet/blob/master/losses.py

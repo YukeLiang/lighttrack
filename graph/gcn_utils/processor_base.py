@@ -97,7 +97,7 @@ class Processor(IO):
         self.show_epoch_info()
 
     def test(self):
-        for _ in range(100):
+        for _ in range(2):
             self.iter_info['loss'] = 1
             self.show_iter_info()
         self.epoch_info['mean loss'] = 1

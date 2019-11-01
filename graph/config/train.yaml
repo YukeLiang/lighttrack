@@ -13,6 +13,7 @@ test_feeder_args:
 
 # model
 model: gcn_utils.gcn_model.Model
+#model: graph/epoch1_model.pt
 model_args:
   in_channels: 2
   num_class: 128 # output feature dimension

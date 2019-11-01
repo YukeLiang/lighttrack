@@ -1,0 +1,42 @@
+# command line: main.py processor_siamese_gcn -c config/inference.yaml --phase test
+
+base_lr: 0.01
+batch_size: 256
+config: config/inference.yaml
+debug: false
+device:
+- 0
+eval_interval: 1
+feeder: feeder.feeder
+ignore_weights: []
+log_interval: 100
+model: gcn_utils.gcn_model.Model
+model_args:
+    edge_importance_weighting: true
+    graph_args:
+        layout: PoseTrack
+        strategy: spatial
+    in_channels: 2
+    num_class: 128
+nesterov: true
+num_epoch: 80
+num_worker: 4
+optimizer: SGD
+pavi_log: false
+phase: test
+print_log: true
+save_interval: 10
+save_log: true
+save_result: false
+show_topk:
+- 1
+- 5
+start_epoch: 0
+step: []
+test_batch_size: 256
+test_feeder_args: {}
+train_feeder_args: {}
+use_gpu: true
+weight_decay: 0.0001
+weights: ./graph/epoch1_model.pt
+work_dir: ./work_dir/tmp

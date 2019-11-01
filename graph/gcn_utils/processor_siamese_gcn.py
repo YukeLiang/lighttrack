@@ -167,15 +167,12 @@ class SGCN_Processor(Processor):
         self.result = np.concatenate(result_frag)
         if evaluation:
             self.label = np.concatenate(label_frag)
-            print(np.max(test_loss_value))
             self.epoch_info['mean_loss']= np.mean(test_loss_value)
             self.writer.add_scalar('Loss/test', self.epoch_info['mean_loss'], self.meta_info['epoch'])
             self.show_epoch_info()
 
             #print(result_frag)
             #print(label_frag[0:20])
-            print(pred_label_frag[0:20])
-
             # show accuracy
             accuracy = calculate_accuracy(label_frag, pred_label_frag)
             print("accuracy: {}".format(accuracy))
@@ -212,8 +209,26 @@ def calculate_accuracy(label_list, pred_list):
     assert(len_pred == len_label)
 
     num_true = 0
+    fp = 0
+    tp = 0
+    tn = 0
+    fn = 0
     for id in range(len_pred):
         if label_list[id] == pred_list[id]:
             num_true += 1
+        if label_list[id] == 0 and pred_list[id] == 1:
+            fp += 1
+        elif label_list[id] == 1 and pred_list[id] == 1:
+            tp += 1
+        elif label_list[id] == 1 and pred_list[id] == 0:
+            tn += 1
+        elif label_list[id] == 0 and pred_list[id] == 0:
+            fn += 1
+
+    print("True Positive: ", tp)
+    print("False Positive: ", fp)
+    print("TN: ", tn)
+    print("FN: ", fn)
+    print("Total: ", len_pred)
     accuracy = num_true * 100.0 / len_pred
     return accuracy
